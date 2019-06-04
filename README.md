@@ -4318,6 +4318,109 @@ class Solution(object):
 *** 
 
 
+# 461 - Hamming Distance  汉明距离  - Easy 
+
+## 问题描述
+
+The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
+
+Given two integers x and y, calculate the Hamming distance.
+
+
+Note:
+0 ≤ x, y < 2^31.
+
+两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 x 和 y，计算它们之间的汉明距离。
+
+
+## 输入输出
+
+输入: x = 1, y = 4
+
+输出: 2
+
+解释:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       ↑   ↑
+
+上面的箭头指出了对应二进制位不同的位置。
+
+
+
+## 思路
+1. 两个数异或操作 然后求其中二进制中1的个数
+
+2. 递归操作  如果两个数完全一致 返回0   否则从最低位开始统计1的个数  右移，递归调用
+
+## 代码
+
+```
+C++
+1. 
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int tmp = x ^ y;
+        int res = 0;
+        while(tmp)
+        {
+            res = res + tmp % 2; 
+            tmp  = tmp >> 1;
+        }
+        return res;
+        
+    }
+};
+
+
+2. 
+
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+       if( (x^y) == 0)
+           return 0;
+       return ((x ^ y) %2 + hammingDistance(x/2,y/2));
+        
+    }
+};
+
+
+```
+
+补充:
+求一个数二进制中1的个数 
+
+
+```
+1. 遍历异或结果的每一位，统计为1的个数
+
+int res = 0;
+for (int i = 0; i < 32; ++i) 
+{
+    res += (exc >> i) & 1;
+
+}
+return res;
+
+2. 假如数为num, num & (num - 1)可以快速地移除最右边的bit 1， 一直循环到num为0, 总的循环数就是num中bit 1的个数
+
+
+int hammingDistance(int x, int y) {
+        int res = 0, exc = x ^ y;
+        while (exc) {
+            ++res;
+            exc &= (exc - 1);
+        }
+        return res;
+    }
+
+```
+
+***
 
 
 
