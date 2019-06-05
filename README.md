@@ -4537,10 +4537,123 @@ b = a ^ b;
 a = a ^ b;
 
 
+```
 
 
+
+## 0-1背包问题 
+
+问题：有n个物品，第i个物品价值为vi，重量为wi，其中vi和wi均为非负数，背包的容量为W，W为非负数。现需要考虑如何选择装入背包的物品，使装入背包的物品总价值最大。该问题以形式化描述如下：
+
+目标函数  max∑ vixi 
+
+
+约束条件   max∑ wixi
+
+求最优解
+
+最优解的结构:
+
+如果包含物品n  其余构成子问题 在容量为 w-wn时的最优解 
+
+如果不包含物品n  其余构成子问题 1,2,...,xn-1在容量为W时的最优解 
+
+
+  根据上述分析的最优解的结构递归地定义问题最优解。设c[i,w]表示背包容量为w时，i个物品导致的最优解的总价值，得到下式。显然要求c[n,w]。
 
 ```
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+/*
+0-1 背包问题（迭代版）
+输入：
+products_count：商品的数量
+capacity：背包的容量
+weight_array：商品重量数组
+value_array：商品价格数组
+result：结果数组
+*/
+
+void knapsack(int products_count,
+	int capacity,
+	vector<int>& weight_array,
+	vector<int>& value_array,
+	vector<vector<int>>& result)
+{
+	int i = 1, j = 1;
+	for (i = 1; i <= products_count; ++i)
+	{
+		for (j = 1; j <= capacity; ++j)// j代表当前背包的容量
+		{
+			if (weight_array[i] > j)
+			{
+				result[i][j] = result[i - 1][j];// 放弃第 i 件商品，拿第 i - 1 件商品
+			}
+			else {
+				int withI = result[i - 1][j - weight_array[i]] + value_array[i];
+				int withoutI = result[i - 1][j];
+				result[i][j] = (withI <= withoutI ? withoutI : withI);
+			}
+		}
+	}
+
+}
+
+
+
+int main()
+{
+	while (1)
+	{
+		int products_count, capacity;
+		vector<int> weight_array(1, 0);
+		vector<int> value_array(1, 0);
+		cout << endl << "-----------------------------" << endl;
+		cout << "please input products count and knapsack's capacity: " << endl; // 输入商品数量和背包容量
+		cin >> products_count >> capacity;
+		cout << "please input weight array for " << products_count << " products" << endl;
+		for (int i = 1; i <= products_count; ++i) // 循环输入每件商品的重量
+		{
+			int tmp;
+			cin >> tmp;
+			weight_array.push_back(tmp);
+		}
+		cout << "please input value array for " << products_count << " products" << endl;
+		for (int i = 1; i <= products_count; ++i) // 循环输入每件商品的价格
+		{
+			int tmp;
+			cin >> tmp;
+			value_array.push_back(tmp);
+		}
+		vector<vector<int>> result(products_count + 1, vector<int>(capacity + 1, 0)); // 结果数组
+		knapsack(products_count, capacity, weight_array, value_array, result); // 调用动态规划算法
+
+		cout << "\n Result Matrix" << endl;
+		/*for (int i = 1; i <= products_count; i++)
+		{
+			for (int  j = 1; j <= capacity; j++)
+			{
+				cout << result[i][j] << " ";
+			}
+			cout << endl;
+		}*/
+		cout << "knapsack result is " << result[products_count][capacity] << endl;
+	}
+
+
+	return 0;
+}
+
+
+ref: https://blog.csdn.net/chengonghao/article/details/51915753
+```
+
 
 # 思路总结
 
