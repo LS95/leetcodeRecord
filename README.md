@@ -1,7 +1,6 @@
 # leetcodeRecord
 my leetcodeRecord leetcode刷题记录
 
-
 # 1.two number  -- easy
 
 ## 问题描述 
@@ -850,6 +849,78 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
 
 
 *** 
+
+
+# 20 - Valid Parentheses   有效的括号 - Easy 
+## 问题描述
+
+给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+左括号必须用相同类型的右括号闭合。
+左括号必须以正确的顺序闭合。
+注意空字符串可被认为是有效字符串。
+
+
+## 输入输出
+示例 1:
+
+输入: "()"
+输出: true
+示例 2:
+
+输入: "()[]{}"
+输出: true
+示例 3:
+
+输入: "(]"
+输出: false
+示例 4:
+
+输入: "([)]"
+输出: false
+示例 5:
+
+输入: "{[]}"
+输出: true
+
+## 思路
+
+利用栈的思想  如果是左括号则入栈 
+
+找到匹配的右括号则弹出  
+
+最后判断栈是否为空 
+
+## 代码
+
+```
+class Solution(object):
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        res = []
+        for c in s:
+            if c in ['(', '[', '{']:
+                res.append(c)
+            elif c == ')':
+                if not res or res.pop() != '(' : return False
+            elif c == ']':
+                if not res or res.pop() != '[' : return False
+            elif c == '}':
+                if not res or res.pop() != '{' : return False
+            else:
+                return False
+        return False if res else True
+
+
+```
+***
+
+
 
 # 21   Merge Two Sorted Lists -合并2个有序的链表 -  Easy
 
@@ -2211,6 +2282,90 @@ class Solution:
 ```
 ***
 
+# 118  Pascal's Triangle   - Easy 
+
+## 问题描述
+帕斯卡三角形  
+给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+
+
+## 输入输出
+
+[
+[1],             1   1 
+[1,1],           2   1
+[1,2,1],         3   1 2
+[1,3,3,1],       4   1 3 
+[1,4,6,4,1]      5   1 4 6
+[1,5,10,10,5,1]  6   1 5 10 
+]
+## 思路
+
+1. 
+首先图形是三角形  然后每一行都是轴对称的 
+根据规则  
+a[i][j] = a[i-1][j-1]+a[i-1][j]
+
+找到每一行 轴对称加入
+
+
+2. 
+
+## 代码
+
+```
+1. Python
+class Solution(object):
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+        res  = []
+        for i in range(numRows):
+            tmpList = [1] * (i+1)
+            for j in range(i):
+                if j == 0:
+                    num  = 1
+                else:
+                    num = res[i-1][j-1] + res[i-1][j]
+                tmpList[j] = tmpList[i-j] =  num
+            res.append(tmpList)
+        return res
+
+简化版代码：
+
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        pascal = [[1] * (i+1) for i in range(numRows)]
+        for i in range(numRows):
+            for j in range(1,i):
+                pascal[i][j] = pascal[i-1][j-1]+pascal[i-1][j]
+        return pascal
+
+
+
+2. C++版
+
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> res;
+        for(auto i=0; i< numRows;i++)
+        {
+            res.push_back(vector<int>(i+1,1));
+            for(auto j= 1; j< i; j++)
+            {
+                res[i][j] = res[i-1][j] + res[i-1][j-1];
+            }
+            
+        }
+        return res;
+    }
+};
+
+```
+***
 
 
 
@@ -3012,6 +3167,38 @@ public class Solution {
 ```
 
 
+# 190  - Reverse Bits  -  Easy 
+
+## 问题描述
+
+颠倒给定的 32 位无符号整数的二进制位。 
+## 输入输出
+
+输入: 00000010100101000001111010011100
+输出: 00111001011110000010100101000000
+解释: 输入的二进制串 00000010100101000001111010011100 表示无符号整数 43261596，
+      因此返回 964176192，其二进制表示形式为 00111001011110000010100101000000。 
+## 思路
+
+python 整数转为二进制字符串  zfill补全至长度为32  然后逆序 转整数 
+
+## 代码
+
+```
+Python  
+
+    def reverseBits(self, n):
+        # nB = bin(n)[2:]
+        # newB = '0' * (32 - len(nB)) +nB
+        # reverseB =newB[::-1]
+        # result = int(reverseB, 2)
+        # return result
+        return int(bin(n)[2:].zfill(32)[::-1],2)
+        
+```
+
+
+***
 
 # 198- house-robber 打家劫舍   - Easy
 
@@ -4318,6 +4505,7 @@ class Solution(object):
 *** 
 
 
+
 # 461 - Hamming Distance  汉明距离  - Easy 
 
 ## 问题描述
@@ -4393,7 +4581,7 @@ public:
 
 补充:
 求一个数二进制中1的个数 
-
+[如何效率求二进制数中1的个数](https://blog.csdn.net/qq_37934101/article/details/80531513)
 
 ```
 1. 遍历异或结果的每一位，统计为1的个数
@@ -4406,7 +4594,25 @@ for (int i = 0; i < 32; ++i)
 }
 return res;
 
-2. 假如数为num, num & (num - 1)可以快速地移除最右边的bit 1， 一直循环到num为0, 总的循环数就是num中bit 1的个数
+
+
+
+2. 递归方法求解 
+
+int hammingWeight(uint32_t n) {
+    if(n == 0)
+        return 0;
+    return n%2 + hammingWeight(n / 2) ;
+}
+
+
+3. 使用数组存储  
+
+定义一个长度为255的数组，将0~255中1的个数存在数组中，需要时直接查表就行了，但存储数据需要大量内存。
+
+
+
+4. 假如数为num, num & (num - 1)可以快速地移除最右边的bit 1， 一直循环到num为0, 总的循环数就是num中bit 1的个数
 
 
 int hammingDistance(int x, int y) {
@@ -4418,9 +4624,14 @@ int hammingDistance(int x, int y) {
         return res;
     }
 
+
+
+
+
 ```
 
 ***
+
 
 
 
@@ -4536,10 +4747,7 @@ a = a ^ b;
 b = a ^ b;
 a = a ^ b;
 
-
 ```
-
-
 
 ## 0-1背包问题 
 
@@ -4560,6 +4768,8 @@ a = a ^ b;
 
 
   根据上述分析的最优解的结构递归地定义问题最优解。设c[i,w]表示背包容量为w时，i个物品导致的最优解的总价值，得到下式。显然要求c[n,w]。
+
+动态规划的时间效率为O(nc)其中n表示物品的个数，c表示背包的容量。空间的效率就是用于存储二维数组的占用空间大小，即为O(nc).
 
 ```
 #include <stdio.h>
@@ -4652,6 +4862,94 @@ int main()
 
 
 ref: https://blog.csdn.net/chengonghao/article/details/51915753
+
+https://www.cnblogs.com/variance/p/6909560.html
+
+https://www.cnblogs.com/William-xh/p/7305877.html
+
+最清楚的01背包问题讲解: https://www.cnblogs.com/arsenalfaninecnu/p/8945548.html
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_ROW  1000
+#define MAX_COL  1000
+
+int V[MAX_ROW][MAX_COL] = { 0 };
+
+int getMax(int a, int b)
+{
+	return a <= b ? b : a;
+}
+
+int beibao(int n, int w[], int v[], int x[], int C)
+{
+	int i, j;
+	for (i = 0; i <= n; i++)
+		V[i][0] = 0;
+	for (j = 0; j <= C; j++)
+		V[0][j] = 0;
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < C + 1; j++)
+		{
+			if (j < w[i])
+			{
+				V[i][j] = V[i - 1][j];
+			}
+			else {
+				V[i][j] = getMax(V[i - 1][j], v[i] + V[i - 1][j - w[i]]);
+			}
+		}
+	}
+	j = C;
+	for (i = n - 1; i >= 0; i--)
+	{
+		if (V[i][j] > V[i - 1][j])
+		{
+			x[i] = 1;
+			j = j - w[i];
+		}
+		else {
+			x[i] = 0;
+		}
+	}
+	printf("选中的物品是:\n");
+	for (i = 0; i<n; i++)
+		printf("%d ", x[i]);
+
+	printf("\n");
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < C + 1; j++) {
+			printf("%d\t ", V[i][j]);
+			if (j == C) {
+				printf("\n");
+			}
+		}
+	}
+	return V[n - 1][C];
+
+}
+
+int main()
+{
+	int s;//获得的最大价值
+	int w[5] = { 2,2,6,5,4 };//物品的重量
+	int v[5] = { 6,3,5,4,6 };//物品的价值
+	int x[5];//物品的选取状态
+	int n = 5;
+	int C = 10;//背包最大容量
+
+	s = beibao(n, w, v, x, C);
+
+	printf("最大物品价值为:\n");
+	printf("%d\n", s);
+	system("pause");
+	system("pause");
+	return 0;
+}
+
+
 ```
 
 
@@ -4667,5 +4965,22 @@ ref: https://blog.csdn.net/chengonghao/article/details/51915753
 
 
 
+
+
+# 常用编程思想 
+
+## 1. 动态规划
+
+* 步骤  
+1. 找出最优解的性质 并刻画其结构特征
+2. 递归地定义最优解的值
+3. 以自底向上的方式计算最优值
+4. 根据计算最优值得到的信息，构造一个最优解。
+
+
+* 适用的问题
+
+1. 问题的最优解中包含了子问题的最优解 
+2. 重叠子问题  
 
 
